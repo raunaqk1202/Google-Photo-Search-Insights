@@ -54,10 +54,10 @@ services:
     ports:
       - "8080:8000"
     environment:
-      DATABASE_URL: postgresql://discovery:discovery_secret@postgres:5432/discovery_engine
-      REDIS_URL: redis://redis:6379/0
-      CHROMA_HOST: chromadb
-      CHROMA_PORT: 8000
+      DATABASE_URL: ${DATABASE_URL:-postgresql://discovery:discovery_secret@postgres:5432/discovery_engine}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      CHROMA_HOST: ${CHROMA_HOST:-chromadb}
+      CHROMA_PORT: ${CHROMA_PORT:-8000}
       # Production optimizations
       WORKERS_PER_CORE: "2"
     depends_on:
@@ -75,10 +75,10 @@ services:
       context: ../backend
       dockerfile: Dockerfile
     environment:
-      DATABASE_URL: postgresql://discovery:discovery_secret@postgres:5432/discovery_engine
-      REDIS_URL: redis://redis:6379/0
-      CHROMA_HOST: chromadb
-      CHROMA_PORT: 8000
+      DATABASE_URL: ${DATABASE_URL:-postgresql://discovery:discovery_secret@postgres:5432/discovery_engine}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      CHROMA_HOST: ${CHROMA_HOST:-chromadb}
+      CHROMA_PORT: ${CHROMA_PORT:-8000}
     depends_on:
       postgres:
         condition: service_healthy
@@ -92,7 +92,7 @@ services:
       context: ../backend
       dockerfile: Dockerfile
     environment:
-      REDIS_URL: redis://redis:6379/0
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
     depends_on:
       redis:
         condition: service_healthy
