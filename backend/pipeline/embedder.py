@@ -1,7 +1,7 @@
 import os
 import logging
 from typing import List, Dict, Any
-from chromadb.utils import embedding_functions
+from sentence_transformers import SentenceTransformer
 try:
     from langchain_text_splitters import RecursiveCharacterTextSplitter
 except ImportError:
@@ -29,8 +29,8 @@ logger = logging.getLogger(__name__)
 
 class Embedder:
     def __init__(self, model_name: str = "sentence-transformers/all-MiniLM-L6-v2"):
-        logger.info("Loading lightweight ONNX embedding model via ChromaDB to save RAM")
-        self.ef = embedding_functions.DefaultEmbeddingFunction()
+        logger.info(f"Loading embedding model: {model_name}")
+        self.model = SentenceTransformer(model_name)
         
         # Splitter config from architecture (512 tokens max, 50 token overlap)
         # We approximate tokens with characters (1 token ~= 4 chars)
@@ -42,11 +42,13 @@ class Embedder:
 
     def embed_text(self, text: str) -> List[float]:
         """Generate an embedding for a single string."""
-        return self.ef([text])[0]
+        embedding = self.model.encode(text)
+        return embedding.tolist()
 
     def embed_batch(self, texts: List[str]) -> List[List[float]]:
         """Generate embeddings for a batch of strings."""
-        return self.ef(texts)
+        embeddings = self.model.encode(texts)
+        return embeddings.tolist()
 
     def process_review(self, review_id: str, text: str, metadata: dict) -> List[Dict[str, Any]]:
         """
