@@ -2,7 +2,11 @@ import os
 import logging
 from typing import List, Dict, Any
 from chromadb.utils import embedding_functions
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+try:
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+except ImportError:
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
+
 
 logger = logging.getLogger(__name__)
 
