@@ -10,10 +10,13 @@ class MigrationResponse(BaseModel):
     output: str
 
 @router.get("/run-production-seed", response_model=MigrationResponse)
-async def run_production_seed():
+async def run_production_seed(db_url: str = None):
     try:
         script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'migrate_production.py')
-        result = subprocess.run(["python", script_path], capture_output=True, text=True)
+        env = os.environ.copy()
+        if db_url:
+            env["DATABASE_URL"] = db_url
+        result = subprocess.run(["python", script_path], capture_output=True, text=True, env=env)
         return {"status": "success" if result.returncode == 0 else "error", "output": result.stdout + result.stderr}
     except Exception as e:
         return {"status": "error", "output": str(e)}
