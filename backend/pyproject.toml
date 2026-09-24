@@ -40,6 +40,7 @@ dependencies = [
     "groq>=0.8.0",
     "langchain>=0.1.0",
     "langchain-community>=0.0.10",
+    "langchain-text-splitters>=0.0.1",
 
     # === Utilities ===
     "sse-starlette>=2.1.0",
