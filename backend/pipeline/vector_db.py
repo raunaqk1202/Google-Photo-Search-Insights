@@ -11,14 +11,11 @@ logger = logging.getLogger(__name__)
 
 class VectorDB:
     def __init__(self):
-        chroma_host = os.getenv("CHROMA_HOST", "localhost")
-        chroma_port = os.getenv("CHROMA_PORT", "8000")
+        db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "chroma_data")
+        logger.info(f"Connecting to ChromaDB at {db_path}")
         
-        logger.info(f"Connecting to ChromaDB at {chroma_host}:{chroma_port}")
-        
-        self.client = chromadb.HttpClient(
-            host=chroma_host,
-            port=chroma_port,
+        self.client = chromadb.PersistentClient(
+            path=db_path,
             settings=Settings(allow_reset=True)
         )
         

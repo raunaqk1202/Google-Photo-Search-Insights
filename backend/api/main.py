@@ -35,6 +35,18 @@ async def lifespan(app: FastAPI):
     if settings.app_env == "development":
         Base.metadata.create_all(bind=engine)
         logger.info("Database tables created/verified")
+        
+    try:
+        from pipeline.vector_db import VectorDB
+        from pipeline.sync import sync_to_chroma
+        vdb = VectorDB()
+        if vdb.get_collection().count() == 0:
+            logger.info("VectorDB is empty. Running sync...")
+            sync_to_chroma()
+        else:
+            logger.info(f"VectorDB loaded with {vdb.get_collection().count()} documents.")
+    except Exception as e:
+        logger.error(f"Failed to initialize/sync VectorDB: {e}")
 
     yield
 
