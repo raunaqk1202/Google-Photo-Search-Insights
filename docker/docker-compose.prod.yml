@@ -21,19 +21,7 @@ services:
       retries: 5
     restart: always
 
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: always
-
+  # Redis removed as requested
   chromadb:
     image: chromadb/chroma:latest
     ports:
@@ -63,43 +51,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
-        condition: service_healthy
       chromadb:
         condition: service_started
     command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --workers 4
     restart: always
 
-  celery-worker:
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
-    environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql://discovery:discovery_secret@postgres:5432/discovery_engine}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
-      CHROMA_HOST: ${CHROMA_HOST:-chromadb}
-      CHROMA_PORT: ${CHROMA_PORT:-8000}
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    command: celery -A api.celery_app worker --loglevel=warning --concurrency=4
-    restart: always
-
-  celery-beat:
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
-    environment:
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
-    depends_on:
-      redis:
-        condition: service_healthy
-    command: celery -A api.celery_app beat --loglevel=warning
-    restart: always
-
+  # Celery and Beat removed as requested
 volumes:
   postgres_data:
-  redis_data:
   chroma_data:

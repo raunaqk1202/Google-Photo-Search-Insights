@@ -18,33 +18,23 @@ dependencies = [
     "psycopg2-binary>=2.9.9",
 
     # === Task Queue ===
-    "celery[redis]>=5.4.0",
-    "redis>=5.0.0",
+    # Celery/Redis removed as requested
 
     # === Scraping ===
-    "google-play-scraper>=1.2.0",
-    "app-store-scraper>=0.3.5",
-    "asyncpraw>=7.7.0",
+    # Scrapers removed as requested (data already in DB)
     "httpx>=0.27.0",
-    "beautifulsoup4>=4.12.0",
-    "google-api-python-client>=2.130.0",
-    "apify-client>=1.6.0",
 
     # === NLP & ML ===
-    "spacy>=3.7.0",
-    "sentence-transformers>=3.0.0",
-    "transformers>=4.41.0",
-    "torch>=2.3.0",
-    "vaderSentiment>=3.3.2",
-    "langdetect>=1.0.9",
     "datasketch>=1.6.0",
 
     # === Data Processing ===
     "pandas>=2.2.0",
     "pandera>=0.19.0",
 
-    # === Vector DB ===
+    # === Vector DB & Embeddings ===
     "chromadb>=0.5.0",
+    "onnxruntime>=1.14.0",
+    "tokenizers>=0.13.0",
 
     # === LLM ===
     "groq>=0.8.0",

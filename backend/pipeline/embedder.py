@@ -1,15 +1,15 @@
 import os
 import logging
 from typing import List, Dict, Any
-from sentence_transformers import SentenceTransformer
+from chromadb.utils import embedding_functions
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 logger = logging.getLogger(__name__)
 
 class Embedder:
     def __init__(self, model_name: str = "sentence-transformers/all-MiniLM-L6-v2"):
-        logger.info(f"Loading embedding model: {model_name}")
-        self.model = SentenceTransformer(model_name)
+        logger.info("Loading lightweight ONNX embedding model via ChromaDB to save RAM")
+        self.ef = embedding_functions.DefaultEmbeddingFunction()
         
         # Splitter config from architecture (512 tokens max, 50 token overlap)
         # We approximate tokens with characters (1 token ~= 4 chars)
@@ -21,13 +21,11 @@ class Embedder:
 
     def embed_text(self, text: str) -> List[float]:
         """Generate an embedding for a single string."""
-        embedding = self.model.encode(text)
-        return embedding.tolist()
+        return self.ef([text])[0]
 
     def embed_batch(self, texts: List[str]) -> List[List[float]]:
         """Generate embeddings for a batch of strings."""
-        embeddings = self.model.encode(texts)
-        return embeddings.tolist()
+        return self.ef(texts)
 
     def process_review(self, review_id: str, text: str, metadata: dict) -> List[Dict[str, Any]]:
         """

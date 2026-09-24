@@ -1,7 +1,6 @@
 import os
 import json
 import logging
-import spacy
 from typing import Dict, Any
 
 from groq import Groq
@@ -10,11 +9,11 @@ from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 
-# Try loading spacy model; if not downloaded, it will fail gracefully or download later
 try:
+    import spacy
     nlp = spacy.load("en_core_web_sm")
-except OSError:
-    logger.warning("Spacy model 'en_core_web_sm' not found. NLP features will be skipped.")
+except (ImportError, OSError):
+    logger.warning("Spacy not installed or model 'en_core_web_sm' not found. NLP features will be skipped.")
     nlp = None
 
 PROMPT_TEMPLATE = """You are a UX research data analyst. Given the following user review about Google Photos, 
