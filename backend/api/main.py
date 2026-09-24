@@ -39,10 +39,11 @@ async def lifespan(app: FastAPI):
     try:
         from pipeline.vector_db import VectorDB
         from pipeline.sync import sync_to_chroma
+        import asyncio
         vdb = VectorDB()
         if vdb.get_collection().count() == 0:
-            logger.info("VectorDB is empty. Running sync...")
-            sync_to_chroma()
+            logger.info("VectorDB is empty. Running sync in background...")
+            asyncio.get_event_loop().run_in_executor(None, sync_to_chroma)
         else:
             logger.info(f"VectorDB loaded with {vdb.get_collection().count()} documents.")
     except Exception as e:
