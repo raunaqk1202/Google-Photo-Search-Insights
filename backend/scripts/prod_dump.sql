@@ -58,7 +58,6 @@ CREATE TABLE public.alembic_version (
 );
 
 
-ALTER TABLE public.alembic_version OWNER TO discovery;
 
 --
 -- Name: failure_mode; Type: TABLE; Schema: public; Owner: discovery
@@ -71,7 +70,6 @@ CREATE TABLE public.failure_mode (
 );
 
 
-ALTER TABLE public.failure_mode OWNER TO discovery;
 
 --
 -- Name: memory_cue; Type: TABLE; Schema: public; Owner: discovery
@@ -86,7 +84,6 @@ CREATE TABLE public.memory_cue (
 );
 
 
-ALTER TABLE public.memory_cue OWNER TO discovery;
 
 --
 -- Name: raw_review; Type: TABLE; Schema: public; Owner: discovery
@@ -106,7 +103,6 @@ CREATE TABLE public.raw_review (
 );
 
 
-ALTER TABLE public.raw_review OWNER TO discovery;
 
 --
 -- Name: retrieval_archetype; Type: TABLE; Schema: public; Owner: discovery
@@ -119,7 +115,6 @@ CREATE TABLE public.retrieval_archetype (
 );
 
 
-ALTER TABLE public.retrieval_archetype OWNER TO discovery;
 
 --
 -- Name: scrape_job; Type: TABLE; Schema: public; Owner: discovery
@@ -135,7 +130,6 @@ CREATE TABLE public.scrape_job (
 );
 
 
-ALTER TABLE public.scrape_job OWNER TO discovery;
 
 --
 -- Name: structured_review; Type: TABLE; Schema: public; Owner: discovery
@@ -161,7 +155,6 @@ CREATE TABLE public.structured_review (
 );
 
 
-ALTER TABLE public.structured_review OWNER TO discovery;
 
 --
 -- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: discovery
