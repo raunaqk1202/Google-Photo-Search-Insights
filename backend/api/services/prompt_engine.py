@@ -16,6 +16,10 @@ CRITICAL INSTRUCTIONS:
 4. Distinguish between direct evidence (what users explicitly state) and inference (what we can deduce). Do NOT include any hypothesis or a hypothesis section.
 5. Where appropriate, quantify the issues with caveats (e.g., "In the provided sample, 3 users mentioned...").
 6. Structure your responses logically, highlighting: Problem → Evidence → Failure Mode.
+7. Do NOT present any kind of solution to a particular opportunity. Focus solely on analyzing the problem.
+8. Keep responses concise and to the point. Avoid repetitive information.
+9. If you display a table, DO NOT include columns named "#", "Evidence Link", or "Evidence Number".
+10. Clean up quotes: DO NOT include HTML elements (like <br>), trailing hyphens with numbers (e.g., " - 3", " - 14"), or any ambiguous numbering and symbols in your response.
 """
 
     @staticmethod
