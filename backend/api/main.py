@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.config import get_settings
 from api.database import engine, Base
-from api.routers import health, chat, citations, data
+from api.routers import health, chat, citations, data, migration
 
 settings = get_settings()
 
@@ -71,6 +71,7 @@ app.include_router(chat.router, prefix="/api/v1")
 # app.include_router(scrape.router, prefix="/api/v1")  # Scraper removed
 app.include_router(citations.router, prefix="/api/v1")
 app.include_router(data.router, prefix="/api/v1")
+app.include_router(migration.router, prefix="/api/v1")
 
 
 @app.get("/", tags=["Root"])
