@@ -2,7 +2,6 @@
 -- PostgreSQL database dump
 --
 
-\restrict DsKtnVhQdHX5hTgz40FKwt4rOT4doDdxVWeEdFP5txMsqP21ObuABrq7IheTG1a
 
 -- Dumped from database version 16.15
 -- Dumped by pg_dump version 16.15
@@ -5121,5 +5120,4 @@ ALTER TABLE ONLY public.structured_review
 -- PostgreSQL database dump complete
 --
 
-\unrestrict DsKtnVhQdHX5hTgz40FKwt4rOT4doDdxVWeEdFP5txMsqP21ObuABrq7IheTG1a
 
