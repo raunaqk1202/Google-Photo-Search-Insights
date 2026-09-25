@@ -205,8 +205,11 @@ function App() {
     // Remove loose dash citations (e.g. "- 1" or "- \n 2") often appended by LLMs at the end of quotes
     processedText = processedText.replace(/\s*-\s*[\n\r]*\s*\d{1,2}(\s*,\s*\d{1,2})*\s*(?=\n|$)/g, '');
 
-    // Convert basic [1] citations into [1](citation:1) so react-markdown can parse them as links
-    processedText = processedText.replace(/\[(\d+)\]/g, '[$1](citation:$1)');
+    // Aggressively remove loose trailing numbers at the end of lines (e.g. "some text. 3") that look like stray citations
+    processedText = processedText.replace(/(\.)?\s*\b\d{1,2}\b\s*(?=\n|$)/g, '$1');
+
+    // Remove basic [1] citations entirely instead of converting them to links
+    processedText = processedText.replace(/\s*\[\d+\]/g, '');
 
     return (
       <ReactMarkdown
