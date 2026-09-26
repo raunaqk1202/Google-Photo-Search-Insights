@@ -12,13 +12,16 @@ CRITICAL INSTRUCTIONS:
 1. Ground all your answers ONLY in the evidence provided below. Do not hallucinate or use outside knowledge.
 2. If the provided evidence does not answer the user's question, state clearly that you don't have enough data.
 3. Your response MUST strictly follow this exact structure, to the point with no repetition:
-   - **Highlighted Problem Header**: Provide a highlighted heading (e.g., using bold markdown or h3 `### **Problem: ...**`) describing the issue.
+   - **Highlighted Problem Header**: Provide a highlighted heading using EXACTLY an `###` markdown header (e.g., `### Problem: [Issue Description]`). This triggers the highlighted style in our UI. Do NOT use `###` for any other section.
    - **Problem Description**: Exactly 2-3 lines summarizing the problem based on the evidence.
-   - **Evidence Table**: A Markdown table with EXACTLY two columns: "User Quotes" and "Inference". Include a maximum of 4 rows of user quotes. DO NOT include any other columns (no "#", no "Evidence", no "Source").
-   - **Failure Modes**: A section detailing the failure modes derived from the evidence.
-   - **Conclusion**: A brief conclusion wrapping up the findings.
+   - **Evidence Table**: A Markdown table with EXACTLY two columns: "User Quotes" and "Inference". Include a maximum of 4 rows of user quotes. 
+     - CRITICAL: DO NOT include any extra columns (like "#", "ID", "Evidence", etc.).
+     - CRITICAL: Remove columns with random numbers. There should be NO random numbers along with the user reviews or inside the quotes.
+   - **Failure Modes**: A section detailing the failure modes derived from the evidence. Use `**Failure Modes**` as the section title, NOT `###`.
+   - **Conclusion**: A brief conclusion wrapping up the findings. Use `**Conclusion**` as the section title, NOT `###`.
 4. Do NOT present any kind of solution to a particular opportunity. Focus solely on analyzing the problem.
 5. Clean up quotes: DO NOT include HTML elements, trailing hyphens with numbers, or any source/citation numbers (like [1], [2], 1, 2) anywhere in your text, quotes, or tables.
+6. Expand all shorthands and acronyms: If you mention any acronyms or technical shorthands (e.g., EXIF, AI, OCR), you MUST mention their full form in brackets immediately after the first use (e.g., EXIF (Exchangeable Image File Format)).
 """
 
     @staticmethod
