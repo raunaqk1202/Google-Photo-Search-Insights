@@ -18,6 +18,7 @@ function App() {
   const [opportunities, setOpportunities] = useState([]);
   const [selectedOpp, setSelectedOpp] = useState(null);
   const [isLoadingDashboard, setIsLoadingDashboard] = useState(true);
+  const [connectionError, setConnectionError] = useState(null);
 
   useEffect(() => {
     const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
@@ -63,7 +64,10 @@ function App() {
           setSelectedOpp(mappedOpps[0].id);
         }
       })
-      .catch(err => console.error('Failed to fetch dashboard data:', err))
+      .catch(err => {
+        console.error('Failed to fetch dashboard data:', err);
+        setConnectionError(`Could not connect to backend at ${baseUrl}. Ensure VITE_API_BASE_URL is set correctly in Vercel and CORS_ORIGINS is set in Render.`);
+      })
       .finally(() => setIsLoadingDashboard(false));
   }, []);
 
@@ -286,6 +290,22 @@ function App() {
         <div className="flex flex-col items-center space-y-4">
           <div className="w-10 h-10 border-4 border-google-blue border-t-transparent rounded-full animate-spin"></div>
           <p className="text-sm font-semibold text-gray-600">Loading Dashboard Data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (connectionError) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-[#F8FAFD] p-6">
+        <div className="max-w-md bg-white p-6 rounded-xl border border-red-200 shadow-sm flex flex-col items-center text-center space-y-4">
+          <div className="w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-lg font-bold text-gray-900">Connection Failed</h2>
+          <p className="text-sm text-gray-600 leading-relaxed">{connectionError}</p>
         </div>
       </div>
     );
