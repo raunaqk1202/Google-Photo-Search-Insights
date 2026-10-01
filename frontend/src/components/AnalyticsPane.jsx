@@ -10,8 +10,20 @@ const AnalyticsPane = ({
   initialOpportunities,
   selectedOpp,
   setSelectedOpp,
-  setInputValue
+  setInputValue,
+  isLoading
 }) => {
+  if (isLoading) {
+    return (
+      <main className="w-full h-full p-4 md:p-6 lg:p-7 bg-[#F8FAFD] flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-10 h-10 border-4 border-google-blue border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm font-semibold text-gray-600">Loading Dashboard Data...</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="w-full h-full overflow-y-auto p-4 md:p-6 lg:p-7 space-y-8 bg-[#F8FAFD]">
       

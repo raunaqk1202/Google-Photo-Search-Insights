@@ -17,9 +17,11 @@ function App() {
   const [sources, setSources] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
   const [selectedOpp, setSelectedOpp] = useState(null);
+  const [isLoadingDashboard, setIsLoadingDashboard] = useState(true);
 
   useEffect(() => {
     const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+    setIsLoadingDashboard(true);
     fetch(`${baseUrl}/api/v1/data/dashboard`)
       .then(res => res.json())
       .then(data => {
@@ -61,7 +63,8 @@ function App() {
           setSelectedOpp(mappedOpps[0].id);
         }
       })
-      .catch(err => console.error('Failed to fetch dashboard data:', err));
+      .catch(err => console.error('Failed to fetch dashboard data:', err))
+      .finally(() => setIsLoadingDashboard(false));
   }, []);
 
   // Chat State
@@ -313,6 +316,7 @@ function App() {
       >
         <div className="w-full lg:w-[var(--left-width)] lg:flex-none h-full overflow-hidden">
           <AnalyticsPane
+            isLoading={isLoadingDashboard}
             filterThreshold={filterThreshold}
             setFilterThreshold={setFilterThreshold}
             totalScraped={totalScraped}
