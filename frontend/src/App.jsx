@@ -114,6 +114,10 @@ function App() {
         body: JSON.stringify({ query: query })
       });
 
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+
       const reader = response.body.getReader();
       const decoder = new TextDecoder('utf-8');
 

@@ -39,7 +39,7 @@ class RAGService:
             retrieved_docs = self.retriever.search(query=query, top_k=15, filters=filters)
             
             if not retrieved_docs:
-                yield "I couldn't find any relevant reviews to answer your question."
+                yield json.dumps({"type": "token", "content": "I couldn't find any relevant reviews to answer your question."}) + "\n"
                 return
             
             # 2. Format Evidence
