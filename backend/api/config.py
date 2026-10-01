@@ -26,7 +26,7 @@ class Settings(BaseSettings):
 
     # --- Groq LLM ---
     groq_api_key: str = ""
-    groq_model: str = "llama-3.3-70b-versatile"
+    groq_model: str = "qwen/qwen3.8-27b"
     groq_temperature: float = 0.2
     groq_max_tokens: int = 4096
 
