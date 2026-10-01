@@ -84,12 +84,19 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [activeCitation, setActiveCitation] = useState(null);
 
-  // Stream handler
-  const handleSendMessage = async (e) => {
-    e?.preventDefault();
-    if (!inputValue.trim()) return;
+  // Stream handler — accepts either a form event or a direct query string
+  const handleSendMessage = async (eOrQuery) => {
+    let query;
+    if (typeof eOrQuery === 'string') {
+      // Called programmatically with a direct query string
+      query = eOrQuery.trim();
+    } else {
+      // Called from form submit
+      eOrQuery?.preventDefault();
+      query = inputValue.trim();
+    }
+    if (!query) return;
 
-    const query = inputValue.trim();
     const userMsg = {
       id: Date.now(),
       sender: 'user',
@@ -166,8 +173,11 @@ function App() {
       }
     } catch (error) {
       console.error("Streaming error:", error);
+      const errorMsg = error.message.includes('Server returned')
+        ? `Backend error (${error.message}). The server may still be starting up — please wait a moment and try again.`
+        : "Error connecting to research assistant API. Please check that the backend is running.";
       setMessages(prev => prev.map(m =>
-        m.id === assistantMsgId ? { ...m, text: "Error connecting to research assistant API." } : m
+        m.id === assistantMsgId ? { ...m, text: errorMsg } : m
       ));
     } finally {
       setIsTyping(false);
@@ -357,6 +367,7 @@ function App() {
             selectedOpp={selectedOpp}
             setSelectedOpp={setSelectedOpp}
             setInputValue={setInputValue}
+            onQueryAssistant={handleSendMessage}
           />
         </div>
 

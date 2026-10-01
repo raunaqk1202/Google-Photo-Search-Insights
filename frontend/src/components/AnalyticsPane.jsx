@@ -11,7 +11,8 @@ const AnalyticsPane = ({
   selectedOpp,
   setSelectedOpp,
   setInputValue,
-  isLoading
+  isLoading,
+  onQueryAssistant
 }) => {
   return (
     <main className="w-full h-full overflow-y-auto p-4 md:p-6 lg:p-7 space-y-8 bg-[#F8FAFD]">
@@ -124,7 +125,9 @@ const AnalyticsPane = ({
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
-                      setInputValue(`Tell me more about how users experience "${opp.title}".`);
+                      const query = `Tell me more about how users experience "${opp.title}".`;
+                      setInputValue(query);
+                      if (onQueryAssistant) onQueryAssistant(query);
                     }}
                     className="text-xs font-semibold text-gray-600 hover:text-google-blue flex items-center gap-1 hover:underline"
                   >
