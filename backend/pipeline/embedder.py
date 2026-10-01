@@ -1,11 +1,9 @@
 import os
 import logging
 from typing import List, Dict, Any
-from sentence_transformers import SentenceTransformer
-import torch
 
-# Limit PyTorch to 1 thread to drastically reduce memory overhead on constrained environments like Render's 512MB tier.
-torch.set_num_threads(1)
+from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
+
 try:
     from langchain_text_splitters import RecursiveCharacterTextSplitter
 except ImportError:
@@ -32,9 +30,9 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 class Embedder:
-    def __init__(self, model_name: str = "sentence-transformers/all-MiniLM-L6-v2"):
-        logger.info(f"Loading embedding model: {model_name}")
-        self.model = SentenceTransformer(model_name)
+    def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
+        logger.info(f"Loading embedding model: {model_name} (using Chroma ONNX runtime)")
+        self.ef = DefaultEmbeddingFunction()
         
         # Splitter config from architecture (512 tokens max, 50 token overlap)
         # We approximate tokens with characters (1 token ~= 4 chars)
@@ -46,13 +44,14 @@ class Embedder:
 
     def embed_text(self, text: str) -> List[float]:
         """Generate an embedding for a single string."""
-        embedding = self.model.encode(text)
-        return embedding.tolist()
+        embedding = self.ef([text])[0]
+        # Return as list of floats
+        return [float(x) for x in embedding]
 
     def embed_batch(self, texts: List[str]) -> List[List[float]]:
         """Generate embeddings for a batch of strings."""
-        embeddings = self.model.encode(texts)
-        return embeddings.tolist()
+        embeddings = self.ef(texts)
+        return [[float(x) for x in emb] for emb in embeddings]
 
     def process_review(self, review_id: str, text: str, metadata: dict) -> List[Dict[str, Any]]:
         """
