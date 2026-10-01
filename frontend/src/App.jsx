@@ -280,6 +280,17 @@ function App() {
     );
   };
 
+  if (isLoadingDashboard) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-[#F8FAFD]">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-10 h-10 border-4 border-google-blue border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm font-semibold text-gray-600">Loading Dashboard Data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-screen bg-[#F8FAFD] text-slate-800 font-sans">
 
