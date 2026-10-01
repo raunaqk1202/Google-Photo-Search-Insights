@@ -2,6 +2,9 @@ import os
 import logging
 from typing import List, Dict, Any
 
+# Force Chroma to download ONNX weights to the persistent disk to avoid re-downloads and memory spikes
+os.environ["CHROMA_CACHE_DIR"] = "/app/chroma_data/.cache"
+
 from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
 
 try:

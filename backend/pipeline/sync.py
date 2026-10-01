@@ -75,8 +75,8 @@ def sync_to_chroma():
             batch_documents.append(chunk["text"])
             total_chunks += 1
             
-        # Batch insert into ChromaDB every 100 reviews to avoid massive memory spikes
-        if (i + 1) % 100 == 0 or (i + 1) == len(reviews):
+        # Batch insert into ChromaDB every 25 reviews to avoid massive memory spikes
+        if (i + 1) % 25 == 0 or (i + 1) == len(reviews):
             logger.info(f"  Upserting batch... ({i+1}/{len(reviews)} reviews, {len(batch_ids)} chunks)")
             if batch_ids:
                 collection.upsert(
@@ -86,11 +86,13 @@ def sync_to_chroma():
                     documents=batch_documents
                 )
             
-            # Reset batch
+            # Reset batch and force garbage collection
             batch_ids = []
             batch_embeddings = []
             batch_metadatas = []
             batch_documents = []
+            import gc
+            gc.collect()
 
     logger.info(f"Sync complete! Inserted {total_chunks} chunks into ChromaDB.")
     db.close()
