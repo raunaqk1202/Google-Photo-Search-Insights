@@ -2,6 +2,10 @@ import os
 import logging
 from typing import List, Dict, Any
 from sentence_transformers import SentenceTransformer
+import torch
+
+# Limit PyTorch to 1 thread to drastically reduce memory overhead on constrained environments like Render's 512MB tier.
+torch.set_num_threads(1)
 try:
     from langchain_text_splitters import RecursiveCharacterTextSplitter
 except ImportError:
