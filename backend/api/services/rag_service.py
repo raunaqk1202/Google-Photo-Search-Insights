@@ -43,7 +43,7 @@ class RAGService:
                 return
             
             # 2. Retrieve & Rerank (Top 15)
-            retrieved_docs = self.retriever.search(query=query, top_k=15, filters=filters)
+            retrieved_docs = self.retriever.search(query=query, top_k=5, filters=filters)
             
             if not retrieved_docs:
                 yield json.dumps({"type": "token", "content": "I couldn't find any relevant reviews to answer your question. The vector database may still be syncing — please try again in a minute."}) + "\n"
@@ -66,30 +66,43 @@ class RAGService:
                 }
             ]
             
-            # 5. Stream from Groq
+            # 5. Stream from Groq (with retry for rate limits)
             from api.config import get_settings
+            import time
             settings = get_settings()
             
-            # Use a reliable, fast model
             model = settings.groq_model
             logger.info(f"Calling Groq API (model={model}, evidence_docs={len(retrieved_docs)})...")
             
-            stream = self.client.chat.completions.create(
-                model=model,
-                messages=messages,
-                temperature=settings.groq_temperature,
-                max_tokens=settings.groq_max_tokens,
-                stream=True
-            )
-            
-            # Yield tokens as they arrive
-            token_count = 0
-            for chunk in stream:
-                if chunk.choices and chunk.choices[0].delta.content:
-                    token_count += 1
-                    yield json.dumps({"type": "token", "content": chunk.choices[0].delta.content}) + "\n"
-            
-            logger.info(f"Stream complete. Yielded {token_count} tokens.")
+            max_retries = 2
+            for attempt in range(max_retries):
+                try:
+                    stream = self.client.chat.completions.create(
+                        model=model,
+                        messages=messages,
+                        temperature=settings.groq_temperature,
+                        max_tokens=settings.groq_max_tokens,
+                        stream=True
+                    )
+                    
+                    # Yield tokens as they arrive
+                    token_count = 0
+                    for chunk in stream:
+                        if chunk.choices and chunk.choices[0].delta.content:
+                            token_count += 1
+                            yield json.dumps({"type": "token", "content": chunk.choices[0].delta.content}) + "\n"
+                    
+                    logger.info(f"Stream complete. Yielded {token_count} tokens.")
+                    break  # Success — exit retry loop
+                    
+                except Exception as groq_err:
+                    err_str = str(groq_err)
+                    if "rate_limit" in err_str and attempt < max_retries - 1:
+                        logger.warning(f"Rate limited by Groq. Waiting 60s before retry (attempt {attempt + 1})...")
+                        yield json.dumps({"type": "token", "content": "⏳ Rate limited — waiting a moment before retrying..."}) + "\n"
+                        time.sleep(60)
+                    else:
+                        raise groq_err
             
             # 6. Append citations at the end of the stream
             yield json.dumps({"type": "citations", "citations": citations}) + "\n"

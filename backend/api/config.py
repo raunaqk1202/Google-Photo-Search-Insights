@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     groq_api_key: str = ""
     groq_model: str = "qwen/qwen3.8-27b"
     groq_temperature: float = 0.2
-    groq_max_tokens: int = 4096
+    groq_max_tokens: int = 900
 
     # --- Embedding & Reranker ---
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
