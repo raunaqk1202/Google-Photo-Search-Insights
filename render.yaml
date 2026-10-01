@@ -1,0 +1,44 @@
+databases:
+  - name: discovery-db
+    databaseName: discovery_engine
+    user: discovery
+    plan: free
+
+services:
+  - type: pserv
+    name: discovery-chroma
+    env: docker
+    dockerfilePath: ./docker/chroma/Dockerfile
+    disk:
+      name: chroma-data
+      mountPath: /chroma/chroma
+      sizeGB: 1
+    envVars:
+      - key: ANONYMIZED_TELEMETRY
+        value: "false"
+
+  - type: web
+    name: discovery-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: discovery-db
+          property: connectionString
+      - key: CHROMA_HOST
+        value: discovery-chroma
+      - key: CHROMA_PORT
+        value: "8000"
+
+  - type: web
+    name: discovery-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    publishPath: frontend/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: discovery-backend
+          envVarKey: RENDER_EXTERNAL_URL

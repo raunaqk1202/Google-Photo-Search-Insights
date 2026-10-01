@@ -30,6 +30,7 @@ extract a structured JSON object with these fields:
 - user_pain_score: rate the user's pain/frustration from 1.0 to 5.0 (float) based on the review.
 - business_impact_score: rate the potential business impact of fixing this issue from 1.0 to 5.0 (float).
 - evidence_strength_score: rate the clarity and strength of the evidence in this review from 1.0 to 5.0 (float).
+- reach_score: rate the estimated reach or frequency of this issue among users from 1.0 to 5.0 (float).
 
 If a field cannot be determined from the review, set it to null.
 
@@ -69,12 +70,17 @@ class FeatureExtractor:
         """Calls Groq API to extract UX research fields with robust retries for rate limits."""
         prompt = PROMPT_TEMPLATE.format(review_text=text)
         
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.0,
-            response_format={"type": "json_object"},
-        )
+        kwargs = {
+            "model": self.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.0,
+        }
+        
+        # orpheus does not support JSON response format
+        if "orpheus" not in self.model.lower():
+            kwargs["response_format"] = {"type": "json_object"}
+            
+        response = self.client.chat.completions.create(**kwargs)
         
         content = response.choices[0].message.content
         try:

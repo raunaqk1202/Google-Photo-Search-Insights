@@ -132,7 +132,8 @@ def run_pipeline(reprocess=False, classify_only=False):
             is_retrieval_relevant=True,
             user_pain_score=llm.get("user_pain_score"),
             business_impact_score=llm.get("business_impact_score"),
-            evidence_strength_score=llm.get("evidence_strength_score")
+            evidence_strength_score=llm.get("evidence_strength_score"),
+            reach_score=llm.get("reach_score")
         )
         db.add(sr)
         db.flush()

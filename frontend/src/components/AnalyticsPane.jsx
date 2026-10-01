@@ -76,7 +76,7 @@ const AnalyticsPane = ({
             Score (out of 100) = 35% Reach + 30% User Pain + 20% Business Impact + 15% Evidence Strength
           </p>
           <p className="text-xs text-gray-600">
-            <strong>Reach</strong>: Logarithmic scale of review frequency. <strong>User Pain, Business Impact, Evidence Strength</strong>: Averages of LLM-assigned scores.
+            <strong>Reach, User Pain, Business Impact, Evidence Strength</strong>: Averages of LLM-assigned scores from 1.0 to 5.0.
           </p>
         </div>
 

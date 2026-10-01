@@ -122,6 +122,7 @@ class StructuredReview(Base):
     user_pain_score = Column(Float, nullable=True)
     business_impact_score = Column(Float, nullable=True)
     evidence_strength_score = Column(Float, nullable=True)
+    reach_score = Column(Float, nullable=True)
 
     # Relationships
     raw_review = relationship("RawReview", back_populates="structured_review")
