@@ -26,7 +26,7 @@ class Settings(BaseSettings):
 
     # --- Groq LLM ---
     groq_api_key: str = ""
-    groq_model: str = "meta-llama/llama-4-scout-17b-16e-instruct"
+    groq_model: str = "llama-3.3-70b-versatile"
     groq_temperature: float = 0.2
     groq_max_tokens: int = 4096
 
