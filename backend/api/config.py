@@ -25,10 +25,12 @@ class Settings(BaseSettings):
     qdrant_url: str = "http://localhost:6333"
 
     # --- Groq LLM ---
+    # All free-tier chat models share identical limits: 8K TPM, 200K TPD, 1K RPD.
+    # Available chat models: qwen/qwen3.8-27b, openai/gpt-oss-20b, openai/gpt-oss-120b
     groq_api_key: str = ""
     groq_model: str = "qwen/qwen3.8-27b"
     groq_temperature: float = 0.2
-    groq_max_tokens: int = 900
+    groq_max_tokens: int = 600
 
     # --- Embedding & Reranker ---
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
