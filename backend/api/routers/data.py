@@ -59,8 +59,8 @@ async def get_dashboard(db: Session = Depends(get_db)):
         evidence_strength = row[5] if row[5] is not None else 3.0
         reach_score = row[6] if row[6] is not None else 3.0
         
-        # Weighted formula: 35% Reach, 30% User Pain, 20% Business Impact, 15% Evidence Strength
-        raw_score = (0.35 * reach_score) + (0.30 * user_pain) + (0.20 * business_impact) + (0.15 * evidence_strength)
+        # Weighted formula: 40% User Pain, 25% Reach, 20% Business Impact, 15% Evidence Strength
+        raw_score = (0.25 * reach_score) + (0.40 * user_pain) + (0.20 * business_impact) + (0.15 * evidence_strength)
         
         # Scale the 1.0-5.0 raw score to a 0-100 scale
         total_score = (raw_score - 1.0) * 25
